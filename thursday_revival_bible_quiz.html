@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thursday Revival Bible Quiz</title>
+<style>
+:root{--navy:#172554;--gold:#eab308;--bg:#f5f7fb;--ink:#172033;--muted:#667085;--green:#15803d;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:18px}
+header{background:linear-gradient(135deg,#172554,#1e3a8a);color:white;border-radius:18px;padding:24px 20px;margin:10px 0 18px}
+header .tag{color:#fde68a;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+h1{margin:8px 0;font-size:1.65rem;line-height:1.2}header p{margin:8px 0 0;color:#e0e7ff}
+.card{background:white;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 18px #0f172a0d}
+label{display:block;font-weight:650;margin:0 0 8px}input[type=text]{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem}
+button{border:0;border-radius:11px;padding:13px 17px;font-size:1rem;font-weight:700;cursor:pointer}
+.primary{background:var(--navy);color:white}.secondary{background:#e2e8f0;color:var(--ink)}.gold{background:var(--gold);color:#111827}
+.hidden{display:none!important}.progress{height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:10px 0}.bar{height:100%;background:var(--gold);width:0;transition:width .2s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;gap:10px}
+.qtitle{font-weight:750;font-size:1.08rem;margin:12px 0}
+.option{display:flex;align-items:flex-start;gap:10px;border:1px solid #dbe2ea;border-radius:12px;padding:12px;margin:9px 0;cursor:pointer}
+.option:has(input:checked){border-color:#1e3a8a;background:#eff6ff}.option input{margin-top:4px;accent-color:#1e3a8a}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions button{flex:1;min-width:130px}
+.note{color:var(--muted);font-size:.9rem}.result{text-align:center}.score{font-size:2.5rem;font-weight:850;color:var(--navy)}
+.review{text-align:left;border-top:1px solid #e5e7eb;padding:12px 0}.correct{color:var(--green);font-weight:700}.wrong{color:var(--red);font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="tag">Deeper Life Campus Fellowship • Thursday Revival</div>
+<h1>📖 Bible Knowledge Challenge</h1>
+<p>Angels • Divine Deliverance • Victory Over the Enemy</p>
+</header>
+<section id="start" class="card">
+<h2>Ready to test your knowledge?</h2>
+<p>This quiz is based on the notes from Thursday Revival. Read each question carefully and choose one answer.</p>
+<label for="participant">Your name</label>
+<input id="participant" type="text" placeholder="Enter your full name" maxlength="80">
+<p class="note">There are 24 questions. Your score and answer review will appear after you submit.</p>
+<button class="primary" id="begin">Start Quiz</button>
+</section>
+<section id="quiz" class="card hidden">
+<div class="meta"><span id="counter"></span><span id="timer">No timer</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="question"></div>
+<div class="actions"><button class="secondary" id="prev">← Previous</button><button class="primary" id="next">Next →</button></div>
+</section>
+<section id="result" class="card hidden result">
+<h2 id="greeting"></h2>
+<div class="score" id="score"></div>
+<p id="message"></p>
+<div class="actions"><button class="gold" id="reviewBtn">Review Answers</button><button class="secondary" id="restart">Try Again</button></div>
+<div id="reviews" class="hidden"></div>
+<p class="note">Your result is displayed on this device. This quiz page does not automatically send names or scores to the quiz organizer.</p>
+</section>
+<footer>“Study to shew thyself approved unto God…” — 2 Timothy 2:15</footer>
+</div>
+<script>
+const qs=[
+{q:"According to Psalm 91:11, what does God command His angels concerning the believer?",o:["To keep the believer in all his ways","To make the believer famous","To replace the believer's prayers","To rule over the believer"],a:0,ref:"Psalm 91:11"},
+{q:"Hebrews 1:14 describes angels as:",o:["Ministering spirits","Kings of the earth","Human teachers","The authors of Scripture"],a:0,ref:"Hebrews 1:14"},
+{q:"According to Psalm 103:20, angels are mighty in strength and do what?",o:["Their own will","God's commandments, obeying His word","The commands of every king","Whatever people ask"],a:1,ref:"Psalm 103:20"},
+{q:"Psalm 91:12 says angels will bear the believer up, lest the believer:",o:["Become wealthy","Dash his foot against a stone","Forget his name","Lose his friends"],a:1,ref:"Psalm 91:12"},
+{q:"In Acts 12:5, what was the church doing for Peter while he was in prison?",o:["Praying without ceasing","Celebrating","Preparing to leave town","Arguing with the guards"],a:0,ref:"Acts 12:5"},
+{q:"In Acts 12, who came to Peter in prison?",o:["A priest","An angel of the Lord","A fellow prisoner","Herod"],a:1,ref:"Acts 12:7"},
+{q:"What happened to Peter's chains when the angel appeared?",o:["They became heavier","They fell off his hands","They were hidden","Peter kept them as a souvenir"],a:1,ref:"Acts 12:7"},
+{q:"What did the angel tell Peter to do first?",o:["Hide","Arise quickly","Write a letter","Call the church"],a:1,ref:"Acts 12:7"},
+{q:"In Acts 12:8, what did the angel instruct Peter to put on?",o:["His sandals and garment","A soldier's armour","A robe only","A helmet"],a:0,ref:"Acts 12:8"},
+{q:"When Peter was led out of prison, what did he initially think?",o:["That he was dreaming or seeing a vision","That Herod had become a Christian","That the prison was destroyed","That he was in another country"],a:0,ref:"Acts 12:9"},
+{q:"According to Acts 12:10, what happened as Peter and the angel passed the first and second ward?",o:["They were stopped","They came to the iron gate, which opened of its own accord","The guards followed them","The gate was locked permanently"],a:1,ref:"Acts 12:10"},
+{q:"After the angel departed, what did Peter realize?",o:["The Lord had sent His angel and delivered him","He had escaped by his own strength","The church had stopped praying","He had to return to prison"],a:0,ref:"Acts 12:11"},
+{q:"According to Daniel 6:22, who shut the lions' mouths?",o:["Daniel","The king","God's angel","The guards"],a:2,ref:"Daniel 6:22"},
+{q:"Why was Daniel preserved in the lions' den, according to Daniel 6:22?",o:["He had bribed the guards","He was found innocent before God","The lions were asleep","The king changed the law"],a:1,ref:"Daniel 6:22"},
+{q:"Psalm 34:7 says the angel of the Lord encamps around those who:",o:["Fear Him","Are famous","Are wealthy","Live in palaces"],a:0,ref:"Psalm 34:7"},
+{q:"What does Psalm 34:7 say the angel of the Lord does for those who fear Him?",o:["Delivers them","Makes them kings","Removes all responsibility","Teaches them every language"],a:0,ref:"Psalm 34:7"},
+{q:"Luke 10:19 mentions power to tread on which two creatures?",o:["Lions and bears","Serpents and scorpions","Wolves and foxes","Eagles and snakes"],a:1,ref:"Luke 10:19"},
+{q:"In Luke 10:19, Jesus says He gives power over:",o:["All the power of the enemy","Every human government","The angels","The weather"],a:0,ref:"Luke 10:19"},
+{q:"Which passage in your notes is connected with the dragon, Satan, and overcoming?",o:["Revelation 12","Genesis 2","Matthew 3","John 1"],a:0,ref:"Revelation 12:9–13"},
+{q:"According to Revelation 12:11, the brethren overcame by:",o:["Their riches and position","The blood of the Lamb and the word of their testimony","Their own strength alone","Their number"],a:1,ref:"Revelation 12:11"},
+{q:"Revelation 12:9 identifies the great dragon as:",o:["Peter","Daniel","The devil and Satan","Herod"],a:2,ref:"Revelation 12:9"},
+{q:"Which of these is the main lesson of the Acts 12 account of Peter's deliverance?",o:["God is able to deliver, and the church prayed earnestly","Prayer is unnecessary","Peter escaped without divine help","Believers should never gather to pray"],a:0,ref:"Acts 12:5–11"},
+{q:"Which reference in your notes specifically speaks of angels as ministering spirits?",o:["Hebrews 1:13–14","Luke 10:19","Revelation 12:9","Acts 3:18–21"],a:0,ref:"Hebrews 1:13–14"},
+{q:"The overall message of these revival notes encourages believers to:",o:["Depend on God, pray, and trust His power and ministry","Worship angels","Fear every difficulty","Ignore the Scriptures"],a:0,ref:"Theme of the notes"}
+];
+let name="",idx=0,answers=Array(qs.length).fill(null),started=false;
+const $=id=>document.getElementById(id);
+function begin(){name=$("participant").value.trim();if(!name){$("participant").focus();alert("Please enter your name first.");return}idx=0;answers=Array(qs.length).fill(null);$("start").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");render()}
+function render(){const q=qs[idx];$("counter").textContent=`Question ${idx+1} of ${qs.length}`;$("bar").style.width=((idx+1)/qs.length*100)+"%";$("question").innerHTML=`<div class="qtitle">${idx+1}. ${q.q}</div>`+q.o.map((opt,i)=>`<label class="option"><input type="radio" name="answer" value="${i}" ${answers[idx]===i?"checked":""}><span><b>${String.fromCharCode(65+i)}.</b> ${opt}</span></label>`).join("");document.querySelectorAll('input[name="answer"]').forEach(r=>r.addEventListener("change",e=>answers[idx]=Number(e.target.value)));$("prev").disabled=idx===0;$("prev").style.opacity=idx===0?.5:1;$("next").textContent=idx===qs.length-1?"Submit Quiz":"Next →"}
+function next(){if(answers[idx]===null){alert("Please choose an answer before continuing.");return}if(idx<qs.length-1){idx++;render()}else submit()}
+function prev(){if(idx>0){idx--;render()}}
+function submit(){const score=answers.reduce((s,a,i)=>s+(a===qs[i].a?1:0),0);$("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("greeting").textContent=`Well done, ${name}!`; $("score").textContent=`${score} / ${qs.length} (${Math.round(score/qs.length*100)}%)`;let msg=score>=21?"Excellent! You have a strong grasp of the revival notes.":score>=16?"Good effort! Review the Scriptures and strengthen your understanding.":score>=12?"Keep studying—you are making progress. Read the references again and try once more.":"Keep going! Take time to read the Bible passages from the revival notes and retake the quiz."; $("message").textContent=msg;$("reviews").innerHTML=qs.map((q,i)=>`<div class="review"><b>${i+1}. ${q.q}</b><p>Your answer: ${answers[i]===null?"Not answered":q.o[answers[i]]} — <span class="${answers[i]===q.a?"correct":"wrong"}">${answers[i]===q.a?"Correct":"Incorrect"}</span></p><p>Correct answer: <b>${String.fromCharCode(65+q.a)}. ${q.o[q.a]}</b></p><p class="note">Read: ${q.ref}</p></div>`).join("");}
+$("begin").onclick=begin;$("next").onclick=next;$("prev").onclick=prev;$("reviewBtn").onclick=()=>{$("reviews").classList.toggle("hidden");$("reviewBtn").textContent=$("reviews").classList.contains("hidden")?"Review Answers":"Hide Review"};$("restart").onclick=()=>{ $("result").classList.add("hidden");$("start").classList.remove("hidden");$("participant").value=name;};
+</script>
+</body></html>
